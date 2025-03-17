@@ -23,16 +23,30 @@ app.get('/books/:bookId', (req, res) => {
   }
 });
 
+let currentBookId = 1; 
+
 app.post('/books', (req, res) => {
-  const { id, title, details } = req.body;
-  if (!id || !title || !details) {
-    return res.status(400).json({ error: 'Missing book info' });
+  const { title, details } = req.body;
+
+
+  if (!title || !details || !Array.isArray(details)) {
+    return res.status(400).json({ error: "Missing required book details" });
   }
 
-  const newBook = { id, title, details };
-  bookCollection.push(newBook);
-  res.status(201).json(newBook);
+  
+  const newBook = {
+    id: String(currentBookId), 
+    title,
+    details,
+  };
+
+  
+  currentBookId++;
+
+  books.push(newBook); 
+  res.status(201).json(newBook); 
 });
+
 
 app.put('/books/:bookId', (req, res) => {
   const { title, details } = req.body;
